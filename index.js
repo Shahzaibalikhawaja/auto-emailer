@@ -1,32 +1,39 @@
+import express from "express";
 import dotenv from "dotenv";
 import nodemailer from "nodemailer";
 
 dotenv.config();
+const app = express();
+app.use(express.json());
 
-// Uncomment when you need logs
-// console.log("Using Email => ", process.env.EMAIL_ADDRESS);
-// console.log("Using Password => ", process.env.EMAIL_PASS);
+const transporter = nodemailer.createTransport({
+	service: "gmail",
+	auth: {
+		user: process.env.EMAIL_ADDRESS,
+		pass: process.env.EMAIL_PASS,
+	},
+});
 
-const sendEmail = async () => {
-	try {
-		const transporter = nodemailer.createTransport({
-			service: "gmail",
-			auth: {
-				user: process.env.EMAIL_ADDRESS,
-				pass: process.env.EMAIL_PASS,
-			},
-		});
+app.post("/send-email", async (req, res) => {
+	const { to, subject, body } = req.body;
 
-		const info = await transporter.sendMail({
-			to: "shahzaib.ali.khawaja@gmail.com",
-			subject: "Test Email",
-			text: "This is a test email sent using Nodemailer and Gmail App Password.",
-		});
-
-		console.log("Email sent:", info);
-	} catch (error) {
-		console.error("Error:", error);
+	if (!to || !subject || !body) {
+		return res.status(400).json({ error: "Missing fields: to, subject, body" });
 	}
-};
 
-sendEmail();
+	try {
+		const info = await transporter.sendMail({
+			to,
+			subject,
+			text: body,
+		});
+
+		res.json({ success: true, message: "Email sent", info });
+	} catch (err) {
+		console.error(err);
+		res.status(500).json({ error: "Email sending failed", details: err.message });
+	}
+});
+
+const PORT = process.env.PORT;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
