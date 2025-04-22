@@ -18,13 +18,12 @@ const sendEmail = async () => {
 		});
 
 		const info = await transporter.sendMail({
-			from: process.env.EMAIL_USER, // sender
-			to: "shahzaib.ali.khawaja@gmail.com", // receiver
+			to: "shahzaib.ali.khawaja@gmail.com",
 			subject: "Test Email",
 			text: "This is a test email sent using Nodemailer and Gmail App Password.",
 		});
 
-		console.log("Email sent:", info.response);
+		console.log("Email sent:", info);
 	} catch (error) {
 		console.error("Error:", error);
 	}
