@@ -1,0 +1,17 @@
+{
+  "name": "auto-emailer",
+  "version": "1.0.0",
+  "description": "A Simple prototype to send emails automatically, using nodemailer",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node index.js"
+  },
+  "keywords": [],
+  "author": "Shahzaib",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "nodemailer": "^6.10.1"
+  }
+}
